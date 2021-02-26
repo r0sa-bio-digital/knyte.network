@@ -110,6 +110,10 @@ router
     const pat = Deno.env.get("GITHAB_PAT");
     const owner = ctx.request.url.searchParams.get("owner");
     const repo = ctx.request.url.searchParams.get("repo");
+    console.log(ctx.request.url);
+    console.log(pat);
+    console.log(owner);
+    console.log(repo);
     if (pat && owner && repo)
     {
       const jsonStream = ctx.request.body();

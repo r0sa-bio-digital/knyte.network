@@ -32,7 +32,7 @@ for await (const req of server) {
   }
   else if (req.url === "/commit")
   {
-    const pat = Deno.env.get("GITHAB_PAT"));
+    const pat = Deno.env.get("GITHAB_PAT");
     req.respond({ body: Deno.env.get("TEST") });
   }
   else if (req.url === "/ping")

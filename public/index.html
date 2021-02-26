@@ -43,7 +43,7 @@
         'Content-Type': 'application/json'
       };
       const content = utoa(selfcode);
-      const body = JSON.stringify({message, content});
+      const body = JSON.stringify({comment, content});
       const response = await fetch(location.href + "commit/" + owner + "/" + repo + "/", {method, headers, body});
       const json = await response.json();
       if (response.status !== 200)

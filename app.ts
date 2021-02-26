@@ -51,12 +51,14 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
       );
       if (response.status === 200)
       {
+        console.log("Parse tree:");
         const json = await response.json();
         if (json && json.tree && json.tree.length)
         {
           for (let i = 0; i < json.tree.length; ++i)
           {
             const filename = json.tree[i].path;
+            console.log(filename);
             if (filename === knyteFilename)
             {
               fileUrl = json.tree[i].url;
@@ -72,7 +74,7 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
 }
 
 for await (const req of server) {
-  console.log(req);
+  //console.log(req);
   const path = req.url === "/"
     ? `${Deno.cwd()}/public/index.html`
     : `${Deno.cwd()}/public${req.url}`;

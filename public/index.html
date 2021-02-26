@@ -17,10 +17,22 @@
       else
         console.warn(response.status);
     }
+    
+    async function onClickCommit()
+    {
+      // TODO: test on latest actual version
+      const comment = prompt("Comment for changes being committed:");
+      if (!comment)
+        return;
+      // TODO: post changes and comment
+    }
   </script>
 </head>
 <body onload="onLoad();">
   <h1>knyte network self editor</h1>
   <textarea id="editor"></textarea>
+  <div>
+    <button onclick="onClickCommit();">commit</button>
+  </div>
 </body>
 </html>

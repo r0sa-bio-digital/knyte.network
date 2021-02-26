@@ -1,5 +1,4 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
-import { serveFile } from "https://deno.land/std/http/file_server.ts";
 import * as flags from "https://deno.land/std/flags/mod.ts";
 
 const DEFAULT_PORT = 8080;
@@ -102,9 +101,9 @@ router
     ctx.response.body = `Hello World! Deno ${Deno.version.deno} is in charge.\n`;
   })
   .get("/", async (ctx) => {
-    const path = `${Deno.cwd()}/public/index.html`;
-    const content = await serveFile(ctx.request, path);
-    ctx.response.body = content;
+    await send(ctx, "/index.html", {
+      root: `${Deno.cwd()}/public`,
+    });
   })
   .post("/commit", async (ctx) => {
     let result;

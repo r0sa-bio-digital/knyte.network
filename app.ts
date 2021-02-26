@@ -22,7 +22,7 @@ async function fileExists(path: string) {
   }
 }
 
-async function getActualFileSHA(owner, repo, pat, knyteFilename)
+async function getActualFileSHA(owner: string, repo: string, pat: string, knyteFilename: string)
 {
   let fileUrl, fileSHA;
   const response = await fetch(

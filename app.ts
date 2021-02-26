@@ -110,18 +110,12 @@ router
     const pat = Deno.env.get("GITHAB_PAT");
     const owner = ctx.params.owner;
     const repo = ctx.params.repo;
-    console.log(ctx.request.url);
-    console.log(pat);
-    console.log(owner);
-    console.log(repo);
     if (pat && owner && repo)
     {
+      const knyteFilename = "README.md"; // ?
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
-      console.log(json);
-      const knyteFilename = "README.md"; // ?
-      const message = "test message"; // ?
-      const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
+      const {message, content} = json;
       result = `{"result": "` + await commitFile(owner, repo, pat, knyteFilename, message, content) + `"}`;
     }
     else

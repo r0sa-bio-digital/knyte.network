@@ -92,7 +92,7 @@ for await (const req of server) {
       {
         const owner = params[2];
         const repo = params[3];
-        const knyteFilename = "public/index.html";
+        const knyteFilename = "README.md";
         const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
         if (sha)
         {

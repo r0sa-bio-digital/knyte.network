@@ -98,15 +98,15 @@ async function commitFile(owner: string, repo: string, pat: string, knyteFilenam
 const app = new Application();
 const router = new Router();
 router
-  .get("/ping",(ctx) => {
+  .get("/ping", (ctx) => {
     ctx.response.body = `Hello World! Deno ${Deno.version.deno} is in charge.\n`;
   })
-  .get("/",(ctx) => {
+  .get("/", async (ctx) => {
     const path = `${Deno.cwd()}/public/index.html`;
     const content = await serveFile(req, path);
     ctx.response.body = content;
   })
-  .post("/commit", (ctx) => {
+  .post("/commit", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)

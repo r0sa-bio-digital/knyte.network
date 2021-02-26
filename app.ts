@@ -98,7 +98,7 @@ for await (const req of server) {
         if (sha)
         {
           const message = "test message"; // ?
-          const content = "test content"; // ?
+          const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
           const method = 'PUT';
           const headers = {
             authorization: 'token ' + pat,

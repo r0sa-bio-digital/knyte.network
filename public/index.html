@@ -20,7 +20,11 @@
       else
         console.warn(response.status);
     }
-    
+
+    function utoa(data) {
+      return btoa(unescape(encodeURIComponent(data)));
+    }
+
     async function onClickCommit()
     {
       // TODO: test on latest actual version

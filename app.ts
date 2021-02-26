@@ -24,7 +24,7 @@ async function fileExists(path: string) {
 
 async function getActualFileSHA(owner: string, repo: string, pat: string, knyteFilename: string)
 {
-  let fileUrl, fileSHA;
+  let fileSHA = null;
   const response = await fetch(
     'https://api.github.com/repos/' +
     owner + '/' + repo + '/commits/main',
@@ -51,17 +51,16 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
       );
       if (response.status === 200)
       {
-        console.log("Parse tree:");
+        //console.log("Parse tree:");
         const json = await response.json();
         if (json && json.tree && json.tree.length)
         {
           for (let i = 0; i < json.tree.length; ++i)
           {
             const filename = json.tree[i].path;
-            console.log(filename);
+            //console.log(filename);
             if (filename === knyteFilename)
             {
-              fileUrl = json.tree[i].url;
               fileSHA = json.tree[i].sha;
               break;
             }
@@ -70,7 +69,7 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
       }
     }
   }
-  return null;
+  return fileSHA;
 }
 
 for await (const req of server) {

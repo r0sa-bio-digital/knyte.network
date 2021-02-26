@@ -53,8 +53,8 @@
         alert("Failed to commit.");
         return;
       }
-      if (response.error)
-        alert("Commit error: " + response.error);
+      if (json.error)
+        alert("Commit error: " + json.error);
       else
         alert("Commit succeed.");
     }

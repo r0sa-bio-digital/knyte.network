@@ -53,7 +53,10 @@
         alert("Failed to commit.");
         return;
       }
-      alert("Commit succeed.");
+      if (response.error)
+        alert("Commit error: " + response.error);
+      else
+        alert("Commit succeed.");
     }
   </script>
 </head>

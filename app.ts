@@ -103,7 +103,7 @@ router
   })
   .get("/", async (ctx) => {
     const path = `${Deno.cwd()}/public/index.html`;
-    const content = await serveFile(req, path);
+    const content = await serveFile(ctx.request, path);
     ctx.response.body = content;
   })
   .post("/commit", async (ctx) => {
@@ -111,7 +111,12 @@ router
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)
     {
-      const params = req.url.split("/");
+      const url = ctx.request.url;
+      const jsonStream = ctx.request.body();
+      const json = await jsonStream.value;
+      console.log(url);
+      console.log(json);
+      const params = url.split("/");
       if (!params[0] && params[1] === "commit" && params[2] && params[3])
       {
         const owner = params[2];

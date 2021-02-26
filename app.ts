@@ -122,7 +122,7 @@ for await (const req of server) {
         const knyteFilename = "README.md";
         const message = "test message"; // ?
         const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
-        req.respond({ body: await commitFile(owner, repo, knyteFilename, message, content); });
+        req.respond({ body: await commitFile(owner, repo, knyteFilename, message, content) });
       }
       else
         req.respond({ body: `{"error": "invalid parameters"}` });

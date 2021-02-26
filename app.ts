@@ -1,13 +1,10 @@
-import { serve } from "https://deno.land/std/http/server.ts";
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 import { serveFile } from "https://deno.land/std/http/file_server.ts";
 import * as flags from "https://deno.land/std/flags/mod.ts";
 
 const DEFAULT_PORT = 8080;
 const argPort = flags.parse(Deno.args).port;
 const port = argPort ? Number(argPort) : DEFAULT_PORT;
-
-const server = serve({ port: port });
-console.log("http://localhost:" + port);
 
 async function fileExists(path: string) {
   try {
@@ -98,19 +95,19 @@ async function commitFile(owner: string, repo: string, pat: string, knyteFilenam
     return `{"error": "invalid github sha"}`;
 }
 
-for await (const req of server) {
-  //console.log(req);
-  const path = req.url === "/"
-    ? `${Deno.cwd()}/public/index.html`
-    : `${Deno.cwd()}/public${req.url}`;
-  if (await fileExists(path)) {
+const app = new Application();
+const router = new Router();
+router
+  .get("/ping",(ctx) => {
+    ctx.response.body = `Hello World! Deno ${Deno.version.deno} is in charge.\n`;
+  })
+  .get("/",(ctx) => {
+    const path = `${Deno.cwd()}/public/index.html`;
     const content = await serveFile(req, path);
-    req.respond(content);
-  }
-  else if (req.url === "/ping")
-    req.respond({ body: `Hello World! Deno ${Deno.version.deno} is in charge.\n` });
-  else if (req.url.startsWith("/commit/") && req.method === "POST")
-  {
+    ctx.response.body = content;
+  })
+  .post("/commit", (ctx) => {
+    let result;
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)
     {
@@ -122,14 +119,16 @@ for await (const req of server) {
         const knyteFilename = "README.md";
         const message = "test message"; // ?
         const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
-        req.respond({ body: await commitFile(owner, repo, pat, knyteFilename, message, content) });
+        result = `{"result": "` + await commitFile(owner, repo, pat, knyteFilename, message, content) + `"}`;
       }
       else
-        req.respond({ body: `{"error": "invalid parameters"}` });
+        result = `{"error": "invalid parameters"}`;
     }
     else
-      req.respond({ body: `{"error": "githab pat not found"}` });
-  }
-  else
-    req.respond({status: 404});
-}
+      result = `{"error": "githab pat not found"}`;
+    ctx.response.body = result;
+  });
+app.use(router.routes());
+app.use(router.allowedMethods());;
+app.listen({port});
+console.log("http://localhost:" + port);

@@ -72,6 +72,32 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
   return fileSHA;
 }
 
+async function commitFile(owner: string, repo: string, knyteFilename: string, message: string, content: string)
+{
+  const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
+  if (sha)
+  {
+    const method = 'PUT';
+    const headers = {
+      authorization: 'token ' + pat,
+      'Content-Type': 'application/json'
+    };
+    const body = JSON.stringify({message, content, sha});
+    const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + knyteFilename, {method, headers, body});
+    const json = await response.json();
+    if (response.status !== 200 || json.content.name !== knyteFilename)
+    {
+      console.log(response);
+      console.log(json);
+      return `{"error": "github commit failed"}`;
+    }
+    else
+      return `{"result": "` + json.content.sha + `"}`;
+  }
+  else
+    return `{"error": "invalid github sha"}`;
+}
+
 for await (const req of server) {
   //console.log(req);
   const path = req.url === "/"
@@ -94,30 +120,9 @@ for await (const req of server) {
         const owner = params[2];
         const repo = params[3];
         const knyteFilename = "README.md";
-        const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
-        if (sha)
-        {
-          const message = "test message"; // ?
-          const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
-          const method = 'PUT';
-          const headers = {
-            authorization: 'token ' + pat,
-            'Content-Type': 'application/json'
-          };
-          const body = JSON.stringify({message, content, sha});
-          const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + knyteFilename, {method, headers, body});
-          const json = await response.json();
-          if (response.status !== 200 || json.content.name !== knyteFilename)
-          {
-            console.log(response);
-            console.log(json);
-            req.respond({ body: `{"error": "github commit failed"}` });
-          }
-          else
-            req.respond({ body: `{"result": "` + json.content.sha + `"}` });
-        }
-        else
-          req.respond({ body: `{"error": "invalid github sha"}` });
+        const message = "test message"; // ?
+        const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
+        req.respond({ body: await commitFile(owner, repo, knyteFilename, message, content); });
       }
       else
         req.respond({ body: `{"error": "invalid parameters"}` });

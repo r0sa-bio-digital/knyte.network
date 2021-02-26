@@ -105,31 +105,25 @@ router
       root: `${Deno.cwd()}/public`,
     });
   })
-  .post("/commit", async (ctx) => {
+  .post("/commit/:owner/:repo", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
-    if (pat)
+    const owner = ctx.request.url.searchParams.get("owner");
+    const repo = ctx.request.url.searchParams.get("repo");
+    if (pat && owner && repo)
     {
-      const url = ctx.request.url.pathname;
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
-      console.log(url);
       console.log(json);
-      const params = url.split("/");
-      if (!params[0] && params[1] === "commit" && params[2] && params[3])
-      {
-        const owner = params[2];
-        const repo = params[3];
-        const knyteFilename = "README.md";
-        const message = "test message"; // ?
-        const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
-        result = `{"result": "` + await commitFile(owner, repo, pat, knyteFilename, message, content) + `"}`;
-      }
-      else
-        result = `{"error": "invalid parameters"}`;
+      const owner = params[2];
+      const repo = params[3];
+      const knyteFilename = "README.md";
+      const message = "test message"; // ?
+      const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
+      result = `{"result": "` + await commitFile(owner, repo, pat, knyteFilename, message, content) + `"}`;
     }
     else
-      result = `{"error": "githab pat not found"}`;
+      result = `{"error": "invalid github pat/owner/repo"}`;
     ctx.response.body = result;
   });
 app.use(router.routes());

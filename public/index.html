@@ -5,8 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>knyte network</title>
   <link rel="stylesheet" href="app.css">
+  <script>
+    async function onLoad()
+    {
+      const editorElement = document.getElementById('editor');
+      const response = await fetch('https://knyte-network.herokuapp.com/');
+      editorElement.value = response;
+    }
+  </script>
 </head>
-<body>
-  <h1>Hello from HTML</h1>
+<body onload="onLoad();">
+  <h1>knyte network self editor</h1>
+  <textarea id="editor"></textarea>
 </body>
 </html>

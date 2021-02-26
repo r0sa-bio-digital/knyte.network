@@ -9,8 +9,13 @@
     async function onLoad()
     {
       const editorElement = document.getElementById('editor');
-      const response = await fetch('https://knyte-network.herokuapp.com/');
-      editorElement.value = response;
+      const response = await fetch(location.href);
+      if (response.ok) {
+        const selfcode = await response.text();
+        editorElement.value = selfcode;
+      }
+      else
+        console.warn(response.status);
     }
   </script>
 </head>

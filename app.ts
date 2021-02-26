@@ -108,8 +108,8 @@ router
   .post("/commit/:owner/:repo", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
-    const owner = ctx.request.url.searchParams.get("owner");
-    const repo = ctx.request.url.searchParams.get("repo");
+    const owner = ctx.params.owner;
+    const repo = ctx.params.repo;
     console.log(ctx.request.url);
     console.log(pat);
     console.log(owner);

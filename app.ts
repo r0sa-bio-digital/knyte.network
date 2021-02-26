@@ -35,6 +35,10 @@ for await (const req of server) {
   else if (req.url === "/commit")
   {
     console.log(env);
+    console.log(env.GITHAB_PAT);
+    console.log(env.TEST);
+    console.log(Deno.env.get("GITHAB_PAT"));
+    console.log(Deno.env.get("TEST"));
     req.respond({ body: env.GITHAB_PAT });
   }
   else if (req.url === "/ping")

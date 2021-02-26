@@ -27,13 +27,9 @@ for await (const req of server) {
   if (await fileExists(path)) {
     const content = await serveFile(req, path);
     req.respond(content);
-    continue;
   }
-
-  if (req.url === '/')
-    req.respond({ body: "Hello World from Deno Home\n" });
-  else if (req.url === '/about')
-    req.respond({ body: "About" });
+  else if (req.url === '/ping')
+    req.respond({ body: `Hello World! Deno ${Deno.version} is in charge.\n` });
   else
     req.respond({status: 404});
 }

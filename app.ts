@@ -18,7 +18,7 @@ async function fileExists(path: string) {
   }
 }
 
-async function getActualFileSHA(owner: string, repo: string, pat: string, knyteFilename: string)
+async function getActualFileSHA(owner: string, repo: string, pat: string, coreFilename: string)
 {
   let fileSHA = null;
   const response = await fetch(
@@ -53,7 +53,7 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
           for (let i = 0; i < json.tree.length; ++i)
           {
             const filename = json.tree[i].path;
-            if (filename === knyteFilename)
+            if (filename === coreFilename)
             {
               fileSHA = json.tree[i].sha;
               break;
@@ -66,9 +66,9 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
   return fileSHA;
 }
 
-async function commitFile(owner: string, repo: string, pat: string, knyteFilename: string, message: string, content: string)
+async function commitFile(owner: string, repo: string, pat: string, coreFilename: string, message: string, content: string)
 {
-  const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
+  const sha = await getActualFileSHA(owner, repo, pat, coreFilename)
   if (sha)
   {
     const method = 'PUT';
@@ -77,9 +77,9 @@ async function commitFile(owner: string, repo: string, pat: string, knyteFilenam
       'Content-Type': 'application/json'
     };
     const body = JSON.stringify({message, content, sha});
-    const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + knyteFilename, {method, headers, body});
+    const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + coreFilename, {method, headers, body});
     const json = await response.json();
-    if (response.status !== 200 || json.content.name !== knyteFilename)
+    if (response.status !== 200 || json.content.name !== coreFilename)
     {
       console.log(response);
       console.log(json);
@@ -110,11 +110,11 @@ router
     const repo = ctx.params.repo;
     if (pat && owner && repo)
     {
-      const knyteFilename = "README.md"; // ?
+      const coreFilename = "index.html";
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
       const {comment, content} = json;
-      result = await commitFile(owner, repo, pat, knyteFilename, comment, content);
+      result = await commitFile(owner, repo, pat, coreFilename, comment, content);
     }
     else
       result = `{"error": "invalid github pat/owner/repo"}`;

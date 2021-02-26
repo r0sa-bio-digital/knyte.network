@@ -1,4 +1,4 @@
-import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import { Application, Router, send } from "https://deno.land/x/oak/mod.ts";
 import * as flags from "https://deno.land/std/flags/mod.ts";
 
 const DEFAULT_PORT = 8080;

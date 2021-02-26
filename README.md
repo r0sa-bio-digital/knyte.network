@@ -1,2 +1,2 @@
 # knyte.network
-Self-sufficient web-app module for knyte network implementation. 2.
+Self-sufficient web-app module for knyte network implementation.

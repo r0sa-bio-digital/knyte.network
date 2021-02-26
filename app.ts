@@ -111,7 +111,7 @@ router
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)
     {
-      const url = ctx.request.url;
+      const url = ctx.request.url.pathname;
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
       console.log(url);

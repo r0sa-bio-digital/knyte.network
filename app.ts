@@ -100,7 +100,7 @@ router
   })
   .get("/", async (ctx) => {
     await send(ctx, "/index.html", {
-      root: `${Deno.cwd()}/public`,
+      root: `${Deno.cwd()}`,
     });
   })
   .post("/commit/:owner/:repo", async (ctx) => {

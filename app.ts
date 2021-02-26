@@ -94,24 +94,29 @@ for await (const req of server) {
         const repo = params[3];
         const knyteFilename = "public/index.html";
         const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
-        const message = "test message"; // ?
-        const content = "test content"; // ?
-        const method = 'PUT';
-        const headers = {
-          authorization: 'token ' + pat,
-          'Content-Type': 'application/json'
-        };
-        const body = JSON.stringify({message, content, sha});
-        const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + knyteFilename, {method, headers, body});
-        const json = await response.json();
-        if (response.status !== 200 || json.content.name !== knyteFilename)
+        if (sha)
         {
-          console.log(response);
-          console.log(json);
-          req.respond({ body: `{"error": "github commit failed"}` });
+          const message = "test message"; // ?
+          const content = "test content"; // ?
+          const method = 'PUT';
+          const headers = {
+            authorization: 'token ' + pat,
+            'Content-Type': 'application/json'
+          };
+          const body = JSON.stringify({message, content, sha});
+          const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + knyteFilename, {method, headers, body});
+          const json = await response.json();
+          if (response.status !== 200 || json.content.name !== knyteFilename)
+          {
+            console.log(response);
+            console.log(json);
+            req.respond({ body: `{"error": "github commit failed"}` });
+          }
+          else
+            req.respond({ body: `{"result": "` + json.content.sha + `"}` });
         }
         else
-          req.respond({ body: `{"result": "` + json.content.sha + `"}` });
+          req.respond({ body: `{"error": "invalid github sha"}` });
       }
       else
         req.respond({ body: `{"error": "invalid parameters"}` });

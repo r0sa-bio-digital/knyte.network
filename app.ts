@@ -115,9 +115,7 @@ router
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
       console.log(json);
-      const owner = params[2];
-      const repo = params[3];
-      const knyteFilename = "README.md";
+      const knyteFilename = "README.md"; // ?
       const message = "test message"; // ?
       const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
       result = `{"result": "` + await commitFile(owner, repo, pat, knyteFilename, message, content) + `"}`;

@@ -23,13 +23,15 @@ async function fileExists(path: string) {
 }
 
 for await (const req of server) {
-  const path = `${Deno.cwd()}/public${req.url}`;
+  const path = req.url === '/'
+    ? `${Deno.cwd()}/public/index.html`
+    : `${Deno.cwd()}/public${req.url}`;
   if (await fileExists(path)) {
     const content = await serveFile(req, path);
     req.respond(content);
   }
   else if (req.url === '/ping')
-    req.respond({ body: `Hello World! Deno ${Deno.version} is in charge.\n` });
+    req.respond({ body: `Hello World! Deno ${Deno.version.deno} is in charge.\n` });
   else
     req.respond({status: 404});
 }

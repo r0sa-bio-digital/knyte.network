@@ -47,14 +47,12 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
       );
       if (response.status === 200)
       {
-        //console.log("Parse tree:");
         const json = await response.json();
         if (json && json.tree && json.tree.length)
         {
           for (let i = 0; i < json.tree.length; ++i)
           {
             const filename = json.tree[i].path;
-            //console.log(filename);
             if (filename === knyteFilename)
             {
               fileSHA = json.tree[i].sha;
@@ -115,8 +113,8 @@ router
       const knyteFilename = "README.md"; // ?
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
-      const {message, content} = json;
-      result = `{"result": "` + await commitFile(owner, repo, pat, knyteFilename, message, content) + `"}`;
+      const {comment, content} = json;
+      result = await commitFile(owner, repo, pat, knyteFilename, comment, content);
     }
     else
       result = `{"error": "invalid github pat/owner/repo"}`;

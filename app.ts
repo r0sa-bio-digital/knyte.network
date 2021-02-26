@@ -72,7 +72,7 @@ async function getActualFileSHA(owner: string, repo: string, pat: string, knyteF
   return fileSHA;
 }
 
-async function commitFile(owner: string, repo: string, knyteFilename: string, message: string, content: string)
+async function commitFile(owner: string, repo: string, pat: string, knyteFilename: string, message: string, content: string)
 {
   const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
   if (sha)
@@ -122,7 +122,7 @@ for await (const req of server) {
         const knyteFilename = "README.md";
         const message = "test message"; // ?
         const content = "dGVzdCBjb250ZW50"; //"test content"; // ?
-        req.respond({ body: await commitFile(owner, repo, knyteFilename, message, content) });
+        req.respond({ body: await commitFile(owner, repo, pat, knyteFilename, message, content) });
       }
       else
         req.respond({ body: `{"error": "invalid parameters"}` });

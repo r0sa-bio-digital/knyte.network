@@ -23,6 +23,7 @@ async function fileExists(path: string) {
 }
 
 for await (const req of server) {
+  console.log(req);
   const path = req.url === "/"
     ? `${Deno.cwd()}/public/index.html`
     : `${Deno.cwd()}/public${req.url}`;

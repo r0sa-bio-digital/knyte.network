@@ -22,6 +22,55 @@ async function fileExists(path: string) {
   }
 }
 
+async function getActualFileSHA(owner, repo, pat, knyteFilename)
+{
+  let fileUrl, fileSHA;
+  const response = await fetch(
+    'https://api.github.com/repos/' +
+    owner + '/' + repo + '/commits/main',
+    {
+      headers: {
+        authorization: 'token ' + pat,
+        'If-None-Match': '' // to disable github api 60 seconds cache
+      }
+    }
+  );
+  if (response.status === 200)
+  {
+    const json = await response.json();
+    {
+      const response = await fetch(
+        'https://api.github.com/repos/' +
+        owner + '/' + repo + '/git/trees/' + json.commit.tree.sha,
+        {
+          headers: {
+            authorization: 'token ' + pat,
+            'If-None-Match': '' // to disable github api 60 seconds cache
+          }
+        }
+      );
+      if (response.status === 200)
+      {
+        const json = await response.json();
+        if (json && json.tree && json.tree.length)
+        {
+          for (let i = 0; i < json.tree.length; ++i)
+          {
+            const filename = json.tree[i].path;
+            if (filename === knyteFilename)
+            {
+              fileUrl = json.tree[i].url;
+              fileSHA = json.tree[i].sha;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  return null;
+}
+
 for await (const req of server) {
   console.log(req);
   const path = req.url === "/"
@@ -31,13 +80,45 @@ for await (const req of server) {
     const content = await serveFile(req, path);
     req.respond(content);
   }
-  else if (req.url === "/commit")
-  {
-    const pat = Deno.env.get("GITHAB_PAT");
-    req.respond({ body: Deno.env.get("TEST") });
-  }
   else if (req.url === "/ping")
     req.respond({ body: `Hello World! Deno ${Deno.version.deno} is in charge.\n` });
+  else if (req.url.startsWith("/commit/") && req.method === "POST")
+  {
+    const pat = Deno.env.get("GITHAB_PAT");
+    if (pat)
+    {
+      const params = req.url.split("/");
+      if (!params[0] && params[1] === "commit" && params[2] && params[3])
+      {
+        const owner = params[2];
+        const repo = params[3];
+        const knyteFilename = "public/index.html";
+        const sha = await getActualFileSHA(owner, repo, pat, knyteFilename)
+        const message = "test message"; // ?
+        const content = "test content"; // ?
+        const method = 'PUT';
+        const headers = {
+          authorization: 'token ' + pat,
+          'Content-Type': 'application/json'
+        };
+        const body = JSON.stringify({message, content, sha});
+        const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + knyteFilename, {method, headers, body});
+        const json = await response.json();
+        if (response.status !== 200 || json.content.name !== knyteFilename)
+        {
+          console.log(response);
+          console.log(json);
+          req.respond({ body: `{"error": "github commit failed"}` });
+        }
+        else
+          req.respond({ body: `{"result": "` + json.content.sha + `"}` });
+      }
+      else
+        req.respond({ body: `{"error": "invalid parameters"}` });
+    }
+    else
+      req.respond({ body: `{"error": "githab pat not found"}` });
+  }
   else
     req.respond({status: 404});
 }

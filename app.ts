@@ -99,6 +99,9 @@ const app = new Application();
 const router = new Router();
 router
   .get("/ping", (ctx) => {
+    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
+  })
+  .get("/", async (ctx) => {
 
     // TEST
     const pat = Deno.env.get("GITHAB_PAT");
@@ -108,9 +111,6 @@ router
       console.log(desc);
     }
 
-    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
-  })
-  .get("/", async (ctx) => {
     await send(ctx, `/${targets.frontend}`, {
       root: `${Deno.cwd()}`,
     });

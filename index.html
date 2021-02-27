@@ -82,10 +82,23 @@
     {
       await commitChanges("be-editor", "app.ts");
     }
+
+    function onClickCalc()
+    {
+      const a = document.getElementById("a").value;
+      const b = document.getElementById("b").value;
+      document.getElementById("a+b").textContent = parseFloat(a) + parseFloat(b);
+    }
   </script>
 </head>
 <body onload="onLoad();">
   <h1>knyte network self editor v 0.0.2</h1>
+  <h2>app</h2>
+  <div>
+    <input id="a"><span> + </span><input id="b">
+    <button onclick="onClickCalc();">calc</button>
+    <span id="a+b"></span>
+  </div>
   <h2>index.html (frontend)</h2>
   <textarea id="fe-editor" wrap="off"></textarea>
   <div>

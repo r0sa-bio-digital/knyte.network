@@ -1,8 +1,8 @@
 * minimal full circle prototype - done
 * complete runtime code editing for full stack web app - done
 * example user space app (calc sum of two floats) - done
-* `commit security`
-* additional typescript modules editor
+* commit security - done
+* `additional typescript modules editor`
 * run typescript code by frontend runtime
 * run the same typescript code by backend runtime
 * formalise states of versioning and changes commiting at user interface

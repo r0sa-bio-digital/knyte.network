@@ -19,24 +19,30 @@
     
     async function onLoad()
     {
-      const editorElement = document.getElementById('editor');
-      const response = await fetch(location.href);
-      if (response.ok) {
-        const selfcode = await response.text();
-        editorElement.value = selfcode;
+      loadCodeIntoEditor(editorId, codeFilename)
+      {
+        const editorElement = document.getElementById(editorId);
+        const response = await fetch(location.href + codeFilename);
+        if (response.ok) {
+          const code = await response.text();
+          editorElement.value = code;
+        }
+        else
+          console.warn(response.status);
       }
-      else
-        console.warn(response.status);
+
+      loadCodeIntoEditor("fe-editor", "index.html");
+      loadCodeIntoEditor("be-editor", "app.ts");
     }
 
     function utoa(data) {
       return btoa(unescape(encodeURIComponent(data)));
     }
 
-    async function onClickCommit()
+    async function commitChanges(editorId, codeFilename)
     {
       // TODO: test on latest actual version
-      const comment = prompt("Comment for changes being committed:");
+      const comment = prompt(`Comment for ${codeFilename} changes being committed:`);
       if (comment === null)
         return;
       if (!comment)
@@ -44,15 +50,15 @@
         alert("Unable to commit without comment.");
         return;
       }
-      const editorElement = document.getElementById('editor');
+      const editorElement = document.getElementById(editorId);
       const selfcode = editorElement.value;
       const method = "POST";
       const headers = {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       };
       const content = utoa(selfcode);
       const body = JSON.stringify({comment, content});
-      const response = await fetch(location.href + "commit/" + owner + "/" + repo + "/", {method, headers, body});
+      const response = await fetch(location.href + "commit/" + owner + "/" + repo + "/" + codeFilename + "/", {method, headers, body});
       const json = await response.json();
       if (response.status !== 200)
       {
@@ -66,13 +72,29 @@
       else
         alert("Commit succeed.");
     }
+    
+    async function onClickCommitFrontend()
+    {
+      awayt commitChanges("fe-editor", "index.html");
+    }
+
+    async function onClickCommitBackend()
+    {
+      awayt commitChanges("be-editor", "app.ts");
+    }
   </script>
 </head>
 <body onload="onLoad();">
   <h1>knyte network self editor v 0.0.2</h1>
-  <textarea id="editor"></textarea>
+  <h2>index.html (frontend)</h2>
+  <textarea id="fe-editor"></textarea>
   <div>
-    <button onclick="onClickCommit();">commit</button>
+    <button onclick="onClickCommitFrontend();">commit frontend</button>
+  </div>
+  <h2>app.ts (backend)</h2>
+  <textarea id="be-editor"></textarea>
+  <div>
+    <button onclick="onClickCommitBackend();">commit backend</button>
   </div>
 </body>
 </html>

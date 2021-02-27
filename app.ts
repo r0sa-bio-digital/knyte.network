@@ -105,15 +105,19 @@ router
   .get("/ping", (ctx) => {
     ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge.\n`;
   })
-  .get("/", "/frontend", async (ctx) => {
+  .get("/", async (ctx) => {
     await send(ctx, `/${targets.frontend}`, {
       root: `${Deno.cwd()}`,
     });
   })
-  .get("/backend", async (ctx) => {
-    await send(ctx, `/${targets.backend}`, {
-      root: `${Deno.cwd()}`,
-    });
+  .get("/:target", async (ctx) => {
+    const target = targets[ctx.params.target];
+    if (target)
+      await send(ctx, `/${target}`, {
+        root: `${Deno.cwd()}`,
+      });
+    else
+      ctx.response.body = `{"error": "invalid target"}`;
   })
   .post("/commit/:target", async (ctx) => {
     let result;

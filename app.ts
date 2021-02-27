@@ -108,21 +108,19 @@ router
       root: `${Deno.cwd()}`,
     });
   })
-  .post("/commit/:owner/:repo", async (ctx) => {
+  .post("/commit/:owner/:repo/:filename", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
-    const owner = ctx.params.owner;
-    const repo = ctx.params.repo;
-    if (pat && owner && repo)
+    const {owner, repo, filename} = ctx.params;
+    if (pat && owner && repo && filename)
     {
-      const coreFilename = "index.html";
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
       const {comment, content} = json;
-      result = await commitFile(owner, repo, pat, coreFilename, comment, content);
+      result = await commitFile(owner, repo, pat, filename, comment, content);
     }
     else
-      result = `{"error": "invalid github pat/owner/repo"}`;
+      result = `{"error": "invalid github pat/owner/repo/filename"}`;
     ctx.response.body = result;
   });
 app.use(router.routes());

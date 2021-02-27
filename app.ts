@@ -94,6 +94,8 @@ const targets = {
   backend: "app.ts",
   frontend: "index.html",
 };
+// TODO: find way to determine serverCommitSHA with more accuracy
+const serverCommitSHA = await getActualCommitDesc(coreOwner, coreRepo, Deno.env.get("GITHAB_PAT"));
 
 const app = new Application();
 const router = new Router();
@@ -112,7 +114,7 @@ router
     {
       const desc = await getActualCommitDesc(coreOwner, coreRepo, pat);
       if (desc && desc.sha)
-        ctx.response.body = `{"result": "${desc.sha}"}`;
+        ctx.response.body = `{"repo": "${desc.sha}", "server": "${serverCommitSHA}"}`;
       else
         ctx.response.body = `{"error": "getActualCommitDesc failed"}`;
     }

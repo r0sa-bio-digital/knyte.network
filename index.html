@@ -33,6 +33,19 @@
 
       await loadCodeIntoEditor("frontend");
       await loadCodeIntoEditor("backend");
+      const username = localStorage.getItem("knyte-network-username", username, "");
+      const password = localStorage.getItem("knyte-network-password", password, "");
+      document.getElementById("username").value = username;
+      document.getElementById("password").value = password;
+
+    }
+
+    async function onLogin()
+    {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      localStorage.setItem("knyte-network-username", username);
+      localStorage.setItem("knyte-network-password", password);
     }
 
     function utoa(data) {
@@ -96,8 +109,8 @@
   <button class="submit" onclick="commitChanges('backend');">commit</button>
   <textarea id="backend-editor" wrap="off"></textarea>
   <h2>core.auth</h2>
-  <input id="login" type="text">
-  <input id="password" type="text">
-  <button>login</button>
+  <input id="username" type="text">
+  <input id="password" type="password">
+  <button onclick="onLogin();">login</button>
 </body>
 </html>

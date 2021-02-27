@@ -23,7 +23,10 @@
       if (response.status === 200)
       {
         const json = await response.json();
-        return json && json.result ? json.result : null 
+        if (!json || json.error)
+          return null;
+        const {repo, server} = json;
+        return {repo, server};
       }
       return null;
     }
@@ -49,8 +52,9 @@
       document.getElementById("username").value = username;
       document.getElementById("password").value = password;
       const version = await fetchActualVersion();
-      document.getElementById("actualVersion").textContent = version;
-      document.getElementById("localVersion").textContent = version;
+      document.getElementById("actualVersion").textContent = version.repo;
+      document.getElementById("serverVersion").textContent = version.server;
+      document.getElementById("localVersion").textContent = version.server;
     }
 
     async function onChange()
@@ -111,7 +115,8 @@
     async function onClickCheck()
     {
       const version = await fetchActualVersion();
-      document.getElementById("actualVersion").textContent = version;
+      document.getElementById("actualVersion").textContent = version.repo;
+      document.getElementById("serverVersion").textContent = version.server;
     }
   </script>
 </head>
@@ -128,6 +133,9 @@
   <code>
     <div>
       <span>actual: </span><span id="actualVersion"></span>
+    </div>
+    <div>
+      <span>server: </span><span id="serverVersion"></span>
       <button onclick="onClickCheck();">check</button>
     </div>
     <div>

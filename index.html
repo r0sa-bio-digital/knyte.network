@@ -17,6 +17,17 @@
     }
   </style>
   <script>
+    async fetchActualVersion()
+    {
+      const response = await fetch(location.href + "actual/commit/sha");
+      if (response.status === 200)
+      {
+        const json = await response.json();
+        return json && json.result ? json.result : null 
+      }
+      return null;
+    }
+
     async function onLoad()
     {
       async function loadCodeIntoEditor(target)
@@ -37,7 +48,7 @@
       const password = localStorage.getItem("knyte-network-password", "");
       document.getElementById("username").value = username;
       document.getElementById("password").value = password;
-      const version = await fetch(location.href + "actual/commit/sha");
+      const version = await fetchActualVersion();
       document.getElementById("actualVersion").textContent = version;
       document.getElementById("localVersion").textContent = version;
     }
@@ -99,7 +110,7 @@
 
     async function onClickCheck()
     {
-      const version = await fetch(location.href + "actual/commit/sha");
+      const version = await fetchActualVersion();
       document.getElementById("actualVersion").textContent = version;
     }
   </script>

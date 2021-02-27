@@ -12,6 +12,9 @@
       width: 768px;
       height: 128px;
     }
+    .submit {
+      display: block;
+    }
   </style>
   <script>
     const owner = "r0sa-bio-digital";
@@ -31,8 +34,8 @@
           console.warn(response.status);
       }
 
-      await loadCodeIntoEditor("fe-editor", "index.html");
-      await loadCodeIntoEditor("be-editor", "app.ts");
+      await loadCodeIntoEditor("frontend-editor", "index.html");
+      await loadCodeIntoEditor("backend-editor", "app.ts");
     }
 
     function utoa(data) {
@@ -73,16 +76,6 @@
         alert("Commit succeed.");
     }
     
-    async function onClickCommitFrontend()
-    {
-      await commitChanges("fe-editor", "index.html");
-    }
-
-    async function onClickCommitBackend()
-    {
-      await commitChanges("be-editor", "app.ts");
-    }
-
     function onClickCalc()
     {
       const a = document.getElementById("a").value;
@@ -99,15 +92,11 @@
     <button onclick="onClickCalc();">calc</button>
     <span id="a+b"></span>
   </div>
-  <h2>index.html (frontend)</h2>
-  <textarea id="fe-editor" wrap="off"></textarea>
-  <div>
-    <button onclick="onClickCommitFrontend();">commit frontend</button>
-  </div>
-  <h2>app.ts (backend)</h2>
-  <textarea id="be-editor" wrap="off"></textarea>
-  <div>
-    <button onclick="onClickCommitBackend();">commit backend</button>
-  </div>
+  <h2>core.frontend</h2>
+  <button class="submit" onclick="commitChanges("frontend-editor", "index.html");">commit</button>
+  <textarea id="frontend-editor" wrap="off"></textarea>
+  <h2>core.backend</h2>
+  <button class="submit" onclick="commitChanges("backend-editor", "app.ts");">commit</button>
+  <textarea id="backend-editor" wrap="off"></textarea>
 </body>
 </html>

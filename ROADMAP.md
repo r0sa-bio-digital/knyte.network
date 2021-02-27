@@ -3,6 +3,7 @@
 * example user space app (calc sum of two floats) - done
 * commit security - done
 * `operate with versions and commit states at user interface`
+* informative ui when server is down
 * additional typescript modules editor
 * run typescript code by frontend runtime
 * run the same typescript code by backend runtime

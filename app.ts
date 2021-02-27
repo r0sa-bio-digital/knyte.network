@@ -102,18 +102,22 @@ router
     ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
   })
   .get("/", async (ctx) => {
-
-    // TEST
+    await send(ctx, `/${targets.frontend}`, {
+      root: `${Deno.cwd()}`,
+    });
+  })
+  .get("/actual/commit/sha", async (ctx) => {
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)
     {
       const desc = await getActualCommitDesc(coreOwner, coreRepo, pat);
-      console.log(desc);
+      if (desc && desc.sha)
+        ctx.response.body = `{"result": ${desc.sha}}`;
+      else
+        ctx.response.body = `{"error": "getActualCommitDesc failed"}`;
     }
-
-    await send(ctx, `/${targets.frontend}`, {
-      root: `${Deno.cwd()}`,
-    });
+    else
+      ctx.response.body = `{"error": "invalid pat"}`;
   })
   .get("/:target", async (ctx) => {
     const target = ctx.params.target as targetIndex;

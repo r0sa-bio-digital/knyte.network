@@ -120,8 +120,11 @@ router
     {
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
-      const {comment, content} = json;
-      result = await commitFile(coreOwner, coreRepo, pat, filename, comment, content);
+      const {comment, content, username, password} = json;
+      if (Deno.env.get(username) === password)
+        result = await commitFile(coreOwner, coreRepo, pat, filename, comment, content);
+      else
+        result = `{"error": "invalid knyte username/password"}`;
     }
     else
       result = `{"error": "invalid github pat/target"}`;

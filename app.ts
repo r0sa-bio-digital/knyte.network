@@ -5,6 +5,25 @@ const DEFAULT_PORT = 8080;
 const argPort = flags.parse(Deno.args).port;
 const port = argPort ? Number(argPort) : DEFAULT_PORT;
 
+async function getActualCommitSHA(owner: string, repo: string, pat: string)
+{
+  const response = await fetch(
+    'https://api.github.com/repos/' +
+    owner + '/' + repo + '/commits/main',
+    {
+      headers: {
+        authorization: 'token ' + pat,
+        'If-None-Match': '' // to disable github api 60 seconds cache
+      }
+    }
+  );
+  if (response.status === 200)
+  {
+    const json = await response.json();
+    console.log(json);
+  }
+}
+
 async function getActualFileSHA(owner: string, repo: string, pat: string, coreFilename: string)
 {
   let fileSHA = null;
@@ -97,6 +116,14 @@ router
     ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
   })
   .get("/", async (ctx) => {
+
+    // TEST
+    const pat = Deno.env.get("GITHAB_PAT");
+    if (pat)
+    {
+      await getActualCommitSHA(coreOwner, coreRepo, pat);
+    }
+
     await send(ctx, `/${targets.frontend}`, {
       root: `${Deno.cwd()}`,
     });

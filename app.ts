@@ -94,7 +94,7 @@ const app = new Application();
 const router = new Router();
 router
   .get("/ping", (ctx) => {
-    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge.\n`;
+    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
   })
   .get("/", async (ctx) => {
     await send(ctx, `/${targets.frontend}`, {

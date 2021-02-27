@@ -95,7 +95,7 @@ const targets = {
   frontend: "index.html",
 };
 // TODO: find way to determine serverCommitSHA with more accuracy
-const serverCommitSHA = await getActualCommitDesc(coreOwner, coreRepo, Deno.env.get("GITHAB_PAT"));
+const serverCommitSHA = await getActualCommitDesc(coreOwner, coreRepo, Deno.env.get("GITHAB_PAT") || "");
 
 const app = new Application();
 const router = new Router();

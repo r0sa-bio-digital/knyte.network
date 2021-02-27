@@ -40,7 +40,7 @@
 
     }
 
-    async function onLogin()
+    async function onChange()
     {
       const username = document.getElementById("username").value;
       const password = document.getElementById("password").value;
@@ -109,8 +109,7 @@
   <button class="submit" onclick="commitChanges('backend');">commit</button>
   <textarea id="backend-editor" wrap="off"></textarea>
   <h2>core.auth</h2>
-  <input id="username" type="text">
-  <input id="password" type="password">
-  <button onclick="onLogin();">login</button>
+  <input id="username" type="text" onchange="onChange();">
+  <input id="password" type="password" onchange="onChange();">
 </body>
 </html>

@@ -96,7 +96,7 @@ const app = new Application();
 const router = new Router();
 router
   .get("/ping", (ctx) => {
-    ctx.response.body = `Hello World! Deno ${Deno.version.deno} is in charge.\n`;
+    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge.\n`;
   })
   .get("/", async (ctx) => {
     await send(ctx, "/index.html", {
@@ -124,6 +124,6 @@ router
     ctx.response.body = result;
   });
 app.use(router.routes());
-app.use(router.allowedMethods());;
+app.use(router.allowedMethods());
 app.listen({port});
 console.log("http://localhost:" + port);

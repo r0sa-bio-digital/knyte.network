@@ -19,7 +19,7 @@
     
     async function onLoad()
     {
-      loadCodeIntoEditor(editorId, codeFilename)
+      async function loadCodeIntoEditor(editorId, codeFilename)
       {
         const editorElement = document.getElementById(editorId);
         const response = await fetch(location.href + codeFilename);
@@ -31,8 +31,8 @@
           console.warn(response.status);
       }
 
-      loadCodeIntoEditor("fe-editor", "index.html");
-      loadCodeIntoEditor("be-editor", "app.ts");
+      await loadCodeIntoEditor("fe-editor", "index.html");
+      await loadCodeIntoEditor("be-editor", "app.ts");
     }
 
     function utoa(data) {

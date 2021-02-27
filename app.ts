@@ -5,19 +5,6 @@ const DEFAULT_PORT = 8080;
 const argPort = flags.parse(Deno.args).port;
 const port = argPort ? Number(argPort) : DEFAULT_PORT;
 
-async function fileExists(path: string) {
-  try {
-    const stats = await Deno.lstat(path);
-    return stats && stats.isFile;
-  } catch(e) {
-    if (e && e instanceof Deno.errors.NotFound) {
-      return false;
-    } else {
-      throw e;
-    }
-  }
-}
-
 async function getActualFileSHA(owner: string, repo: string, pat: string, coreFilename: string)
 {
   let fileSHA = null;
@@ -77,7 +64,10 @@ async function commitFile(owner: string, repo: string, pat: string, coreFilename
       'Content-Type': 'application/json'
     };
     const body = JSON.stringify({message, content, sha});
-    const response = await fetch('https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + coreFilename, {method, headers, body});
+    const response = await fetch(
+      'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + coreFilename,
+      {method, headers, body}
+    );
     const json = await response.json();
     if (response.status !== 200 || json.content.name !== coreFilename)
     {

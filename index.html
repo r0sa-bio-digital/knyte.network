@@ -54,6 +54,8 @@
 
     async function commitChanges(target)
     {
+      if (!confirm('Are you sure?'))
+        return;
       // TODO: test on latest actual version
       const comment = prompt(`Comment for ${target} changes being committed:`);
       if (comment === null)
@@ -92,7 +94,7 @@
     {
       const a = document.getElementById("a").value;
       const b = document.getElementById("b").value;
-      document.getElementById("a+b").textContent = parseFloat(a) + parseFloat(b);
+      document.getElementById("a+b").textContent = parseFloat(a) * parseFloat(b);
     }
   </script>
 </head>
@@ -100,12 +102,12 @@
   <h1>knyte network self editor v 0.0.4</h1>
   <h2>app</h2>
   <div>
-    <input id="a"><span> + </span><input id="b">
+    <input id="a"><span> * </span><input id="b">
     <button onclick="onClickCalc();">calc</button>
     <span id="a+b"></span>
   </div>
   <h2>core.frontend</h2>
-  <button class="submit" onclick="commitChanges('frontend');">commit</button>
+  <button class="submit" onclick="commitChanges('frontend');">commit it!</button>
   <textarea id="frontend-editor" wrap="off"></textarea>
   <h2>core.backend</h2>
   <button class="submit" onclick="commitChanges('backend');">commit</button>

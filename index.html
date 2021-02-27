@@ -17,9 +17,6 @@
     }
   </style>
   <script>
-    const owner = "r0sa-bio-digital";
-    const repo = "knyte.network";
-    
     async function onLoad()
     {
       async function loadCodeIntoEditor(editorId, codeFilename)
@@ -34,18 +31,18 @@
           console.warn(response.status);
       }
 
-      await loadCodeIntoEditor("frontend-editor", "index.html");
-      await loadCodeIntoEditor("backend-editor", "app.ts");
+      await loadCodeIntoEditor("frontend-editor", "frontend");
+      await loadCodeIntoEditor("backend-editor", "backend");
     }
 
     function utoa(data) {
       return btoa(unescape(encodeURIComponent(data)));
     }
 
-    async function commitChanges(editorId, codeFilename)
+    async function commitChanges(editorId, target)
     {
       // TODO: test on latest actual version
-      const comment = prompt(`Comment for ${codeFilename} changes being committed:`);
+      const comment = prompt(`Comment for ${target} changes being committed:`);
       if (comment === null)
         return;
       if (!comment)
@@ -61,7 +58,7 @@
       };
       const content = utoa(selfcode);
       const body = JSON.stringify({comment, content});
-      const response = await fetch(location.href + `commit/${owner}/${repo}/${codeFilename}/`, {method, headers, body});
+      const response = await fetch(location.href + `commit/${target}/`, {method, headers, body});
       const json = await response.json();
       if (response.status !== 200)
       {
@@ -93,10 +90,10 @@
     <span id="a+b"></span>
   </div>
   <h2>core.frontend</h2>
-  <button class="submit" onclick="commitChanges("frontend-editor", "index.html");">commit</button>
+  <button class="submit" onclick="commitChanges("frontend-editor", "frontend");">commit</button>
   <textarea id="frontend-editor" wrap="off"></textarea>
   <h2>core.backend</h2>
-  <button class="submit" onclick="commitChanges("backend-editor", "app.ts");">commit</button>
+  <button class="submit" onclick="commitChanges("backend-editor", "backend");">commit</button>
   <textarea id="backend-editor" wrap="off"></textarea>
 </body>
 </html>

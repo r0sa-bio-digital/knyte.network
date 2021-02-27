@@ -121,7 +121,7 @@ router
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
       const {comment, content, username, password} = json;
-      if (Deno.env.get(username) === password)
+      if (Deno.env.get(`USER_${username}`) === password)
         result = await commitFile(coreOwner, coreRepo, pat, filename, comment, content);
       else
         result = `{"error": "invalid knyte username/password"}`;

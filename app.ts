@@ -94,6 +94,7 @@ async function commitFile(owner: string, repo: string, pat: string, coreFilename
 
 const coreOwner = "r0sa-bio-digital";
 const coreRepo = "knyte.network";
+type targetIndex = "backend" | "frontend";
 const targets = {
   backend: "app.ts",
   frontend: "index.html",
@@ -111,7 +112,8 @@ router
     });
   })
   .get("/:target", async (ctx) => {
-    const filename = targets[ctx.params.target];
+    const target = ctx.params.target as targetIndex;
+    const filename = targets[target];
     if (filename)
       await send(ctx, `/${filename}`, {
         root: `${Deno.cwd()}`,
@@ -122,7 +124,8 @@ router
   .post("/commit/:target", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
-    const filename = ctx.params.target ? targets[ctx.params.target] : null;
+    const target = ctx.params.target as targetIndex;
+    const filename = targets[target];
     if (pat && filename)
     {
       const jsonStream = ctx.request.body();

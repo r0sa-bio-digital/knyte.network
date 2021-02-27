@@ -92,35 +92,42 @@ async function commitFile(owner: string, repo: string, pat: string, coreFilename
     return `{"error": "invalid github sha"}`;
 }
 
+const coreOwner = "r0sa-bio-digital";
+const coreRepo = "knyte.network";
+const targets = {
+  backend: "app.ts",
+  frontend: "index.html",
+};
+
 const app = new Application();
 const router = new Router();
 router
   .get("/ping", (ctx) => {
     ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge.\n`;
   })
-  .get("/", async (ctx) => {
-    await send(ctx, "/index.html", {
+  .get("/", "/frontend", async (ctx) => {
+    await send(ctx, `/${targets.frontend}`, {
       root: `${Deno.cwd()}`,
     });
   })
-  .get("/:filename", async (ctx) => {
-    await send(ctx, "/" + ctx.params.filename, {
+  .get("/backend", async (ctx) => {
+    await send(ctx, `/${targets.backend}`, {
       root: `${Deno.cwd()}`,
     });
   })
-  .post("/commit/:owner/:repo/:filename", async (ctx) => {
+  .post("/commit/:target", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
-    const {owner, repo, filename} = ctx.params;
-    if (pat && owner && repo && filename)
+    const filename = targets[ctx.params.target];
+    if (pat && filename)
     {
       const jsonStream = ctx.request.body();
       const json = await jsonStream.value;
       const {comment, content} = json;
-      result = await commitFile(owner, repo, pat, filename, comment, content);
+      result = await commitFile(coreOwner, coreRepo, pat, filename, comment, content);
     }
     else
-      result = `{"error": "invalid github pat/owner/repo/filename"}`;
+      result = `{"error": "invalid github pat/target"}`;
     ctx.response.body = result;
   });
 app.use(router.routes());

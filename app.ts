@@ -111,9 +111,9 @@ router
     });
   })
   .get("/:target", async (ctx) => {
-    const target = targets[ctx.params.target];
-    if (target)
-      await send(ctx, `/${target}`, {
+    const filename = targets[ctx.params.target];
+    if (filename)
+      await send(ctx, `/${filename}`, {
         root: `${Deno.cwd()}`,
       });
     else
@@ -122,7 +122,7 @@ router
   .post("/commit/:target", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");
-    const filename = targets[ctx.params.target];
+    const filename = ctx.params.target ? targets[ctx.params.target] : null;
     if (pat && filename)
     {
       const jsonStream = ctx.request.body();

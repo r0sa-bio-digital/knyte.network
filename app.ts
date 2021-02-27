@@ -103,6 +103,11 @@ router
       root: `${Deno.cwd()}`,
     });
   })
+  .get("/:filename", async (ctx) => {
+    await send(ctx, "/" + ctx.params.filename, {
+      root: `${Deno.cwd()}`,
+    });
+  })
   .post("/commit/:owner/:repo", async (ctx) => {
     let result;
     const pat = Deno.env.get("GITHAB_PAT");

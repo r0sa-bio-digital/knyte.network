@@ -37,7 +37,8 @@
       const password = localStorage.getItem("knyte-network-password", "");
       document.getElementById("username").value = username;
       document.getElementById("password").value = password;
-
+      document.getElementById("actualVersion").textContent = Date.now(); // TODO: fix
+      document.getElementById("localVersion").textContent = Date.now(); // TODO: fix
     }
 
     async function onChange()
@@ -94,6 +95,11 @@
       const b = document.getElementById("b").value;
       document.getElementById("a+b").textContent = parseFloat(a) * parseFloat(b);
     }
+
+    function onClickCheck()
+    {
+      document.getElementById("actualVersion").textContent = Date.now(); // TODO: fix
+    }
   </script>
 </head>
 <body onload="onLoad();">
@@ -104,13 +110,24 @@
     <button onclick="onClickCalc();">calc</button>
     <span id="a+b"></span>
   </div>
-  <h2>core.frontend</h2>
+  <h2>core</h2>
+  <h3>version</h3>
+  <div>
+    <div>
+      <span>actual: </span><span id="actualVersion"></span>
+      <button onclick="onClickCheck();">check</button>
+    </div>
+    <div>
+      <span>local: </span><span id="localVersion"></span>
+    </div>
+  </div>
+  <h3>frontend</h3>
   <button class="submit" onclick="commitChanges('frontend');">commit</button>
   <textarea id="frontend-editor" wrap="off"></textarea>
-  <h2>core.backend</h2>
+  <h3>backend</h3>
   <button class="submit" onclick="commitChanges('backend');">commit</button>
   <textarea id="backend-editor" wrap="off"></textarea>
-  <h2>core.auth</h2>
+  <h3>auth</h3>
   <input id="username" type="text" onchange="onChange();">
   <input id="password" type="password" onchange="onChange();">
 </body>

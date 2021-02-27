@@ -2,10 +2,10 @@
 * complete runtime code editing for full stack web app - done
 * example user space app (calc sum of two floats) - done
 * commit security - done
-* `additional typescript modules editor`
+* `operate with versions and commit states at user interface`
+* additional typescript modules editor
 * run typescript code by frontend runtime
 * run the same typescript code by backend runtime
-* formalise states of versioning and changes commiting at user interface
 * implement changes override protection as well
 * establish typescript ide for designtime and compiletime
 * connect db to replace storage of typescript modules from code repo to db

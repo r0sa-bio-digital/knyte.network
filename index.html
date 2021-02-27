@@ -17,7 +17,7 @@
     }
   </style>
   <script>
-    async fetchActualVersion()
+    async function fetchActualVersion()
     {
       const response = await fetch(location.href + "actual/commit/sha");
       if (response.status === 200)

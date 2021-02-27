@@ -7,6 +7,7 @@ const port = argPort ? Number(argPort) : DEFAULT_PORT;
 
 async function getActualCommitSHA(owner: string, repo: string, pat: string)
 {
+  console.log(1);
   const response = await fetch(
     'https://api.github.com/repos/' +
     owner + '/' + repo + '/commits/main',
@@ -118,9 +119,11 @@ router
   .get("/", async (ctx) => {
 
     // TEST
+    console.log(3);
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)
     {
+      console.log(2);
       await getActualCommitSHA(coreOwner, coreRepo, pat);
     }
 

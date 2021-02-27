@@ -54,8 +54,6 @@
 
     async function commitChanges(target)
     {
-      if (!confirm('Are you sure?'))
-        return;
       // TODO: test on latest actual version
       const comment = prompt(`Comment for ${target} changes being committed:`);
       if (comment === null)

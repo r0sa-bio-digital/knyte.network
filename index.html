@@ -37,8 +37,9 @@
       const password = localStorage.getItem("knyte-network-password", "");
       document.getElementById("username").value = username;
       document.getElementById("password").value = password;
-      document.getElementById("actualVersion").textContent = Date.now(); // TODO: fix
-      document.getElementById("localVersion").textContent = Date.now(); // TODO: fix
+      const version = await fetch(location.href + "actual/commit/sha");
+      document.getElementById("actualVersion").textContent = version;
+      document.getElementById("localVersion").textContent = version;
     }
 
     async function onChange()
@@ -98,7 +99,8 @@
 
     function onClickCheck()
     {
-      document.getElementById("actualVersion").textContent = Date.now(); // TODO: fix
+      const version = await fetch(location.href + "actual/commit/sha");
+      document.getElementById("actualVersion").textContent = version;
     }
   </script>
 </head>

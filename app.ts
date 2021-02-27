@@ -112,7 +112,7 @@ router
     {
       const desc = await getActualCommitDesc(coreOwner, coreRepo, pat);
       if (desc && desc.sha)
-        ctx.response.body = `{"result": ${desc.sha}}`;
+        ctx.response.body = `{"result": "${desc.sha}"}`;
       else
         ctx.response.body = `{"error": "getActualCommitDesc failed"}`;
     }

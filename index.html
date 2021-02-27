@@ -19,10 +19,10 @@
   <script>
     async function onLoad()
     {
-      async function loadCodeIntoEditor(editorId, codeFilename)
+      async function loadCodeIntoEditor(target)
       {
-        const editorElement = document.getElementById(editorId);
-        const response = await fetch(location.href + codeFilename);
+        const editorElement = document.getElementById(target + "-editor");
+        const response = await fetch(location.href + target);
         if (response.ok) {
           const code = await response.text();
           editorElement.value = code;
@@ -31,15 +31,15 @@
           console.warn(response.status);
       }
 
-      await loadCodeIntoEditor("frontend-editor", "frontend");
-      await loadCodeIntoEditor("backend-editor", "backend");
+      await loadCodeIntoEditor("frontend");
+      await loadCodeIntoEditor("backend");
     }
 
     function utoa(data) {
       return btoa(unescape(encodeURIComponent(data)));
     }
 
-    async function commitChanges(editorId, target)
+    async function commitChanges(target)
     {
       // TODO: test on latest actual version
       const comment = prompt(`Comment for ${target} changes being committed:`);
@@ -50,7 +50,7 @@
         alert("Unable to commit without comment.");
         return;
       }
-      const editorElement = document.getElementById(editorId);
+      const editorElement = document.getElementById(target + "-editor");
       const selfcode = editorElement.value;
       const method = "POST";
       const headers = {

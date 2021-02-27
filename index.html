@@ -64,13 +64,15 @@
         return;
       }
       const editorElement = document.getElementById(target + "-editor");
-      const selfcode = editorElement.value;
+      const code = editorElement.value;
       const method = "POST";
       const headers = {
         "Content-Type": "application/json"
       };
-      const content = utoa(selfcode);
-      const body = JSON.stringify({comment, content});
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const content = utoa(code);
+      const body = JSON.stringify({comment, content, username, password});
       const response = await fetch(location.href + `commit/${target}/`, {method, headers, body});
       const json = await response.json();
       if (response.status !== 200)

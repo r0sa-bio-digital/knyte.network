@@ -5,9 +5,8 @@ const DEFAULT_PORT = 8080;
 const argPort = flags.parse(Deno.args).port;
 const port = argPort ? Number(argPort) : DEFAULT_PORT;
 
-async function getActualCommitSHA(owner: string, repo: string, pat: string)
+async function getActualCommitDesc(owner: string, repo: string, pat: string)
 {
-  console.log(1);
   const response = await fetch(
     'https://api.github.com/repos/' +
     owner + '/' + repo + '/commits/main',
@@ -19,52 +18,38 @@ async function getActualCommitSHA(owner: string, repo: string, pat: string)
     }
   );
   if (response.status === 200)
-  {
-    const json = await response.json();
-    console.log(json);
-  }
+    return await response.json();
+  return null;
 }
 
 async function getActualFileSHA(owner: string, repo: string, pat: string, coreFilename: string)
 {
   let fileSHA = null;
-  const response = await fetch(
-    'https://api.github.com/repos/' +
-    owner + '/' + repo + '/commits/main',
-    {
-      headers: {
-        authorization: 'token ' + pat,
-        'If-None-Match': '' // to disable github api 60 seconds cache
-      }
-    }
-  );
-  if (response.status === 200)
+  const commitDesc = await getActualCommitDesc(owner, repo, pat);
+  if (commitDesc)
   {
-    const json = await response.json();
-    {
-      const response = await fetch(
-        'https://api.github.com/repos/' +
-        owner + '/' + repo + '/git/trees/' + json.commit.tree.sha,
-        {
-          headers: {
-            authorization: 'token ' + pat,
-            'If-None-Match': '' // to disable github api 60 seconds cache
-          }
-        }
-      );
-      if (response.status === 200)
+    const response = await fetch(
+      'https://api.github.com/repos/' +
+      owner + '/' + repo + '/git/trees/' + commitDesc.commit.tree.sha,
       {
-        const json = await response.json();
-        if (json && json.tree && json.tree.length)
+        headers: {
+          authorization: 'token ' + pat,
+          'If-None-Match': '' // to disable github api 60 seconds cache
+        }
+      }
+    );
+    if (response.status === 200)
+    {
+      const json = await response.json();
+      if (json && json.tree && json.tree.length)
+      {
+        for (let i = 0; i < json.tree.length; ++i)
         {
-          for (let i = 0; i < json.tree.length; ++i)
+          const filename = json.tree[i].path;
+          if (filename === coreFilename)
           {
-            const filename = json.tree[i].path;
-            if (filename === coreFilename)
-            {
-              fileSHA = json.tree[i].sha;
-              break;
-            }
+            fileSHA = json.tree[i].sha;
+            break;
           }
         }
       }
@@ -114,19 +99,18 @@ const app = new Application();
 const router = new Router();
 router
   .get("/ping", (ctx) => {
-    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
-  })
-  .get("/", async (ctx) => {
 
     // TEST
-    console.log(3);
     const pat = Deno.env.get("GITHAB_PAT");
     if (pat)
     {
-      console.log(2);
-      await getActualCommitSHA(coreOwner, coreRepo, pat);
+      const desc = await getActualCommitDesc(coreOwner, coreRepo, pat);
+      console.log(desc);
     }
 
+    ctx.response.body = `Hello Knyte World! Deno ${Deno.version.deno} is in charge!\n`;
+  })
+  .get("/", async (ctx) => {
     await send(ctx, `/${targets.frontend}`, {
       root: `${Deno.cwd()}`,
     });

@@ -97,7 +97,7 @@
       document.getElementById("a+b").textContent = parseFloat(a) * parseFloat(b);
     }
 
-    function onClickCheck()
+    async function onClickCheck()
     {
       const version = await fetch(location.href + "actual/commit/sha");
       document.getElementById("actualVersion").textContent = version;

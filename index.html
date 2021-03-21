@@ -71,7 +71,13 @@
 
     async function commitChanges(target)
     {
-      // TODO: test on latest actual version
+      const localVersion = document.getElementById("localVersion").textContent;
+      const repoVersion = (await updateVersion()).repo;
+      if (localVersion !== repoVersion)
+      {
+        setTimeout(() => alert('Failed to commit changes. Local version does not match actual repo version.'), 10);
+        return;
+      }
       const comment = prompt(`Comment for ${target} changes being committed:`);
       if (comment === null)
         return;
@@ -101,8 +107,10 @@
       }
       if (json.error)
         alert("Commit error: " + json.error);
-      else
+      else {
+        await updateVersion();
         alert("Commit succeed.");
+      }
     }
     
     function onClickCalc()
@@ -112,11 +120,17 @@
       document.getElementById("a+b").textContent = parseFloat(a) * parseFloat(b);
     }
 
-    async function onClickCheck()
+    async function updateVersion()
     {
       const version = await fetchActualVersion();
       document.getElementById("actualVersion").textContent = version.repo;
       document.getElementById("serverVersion").textContent = version.server;
+      return version;
+    }
+
+    async function onClickCheck()
+    {
+      await updateVersion();
     }
   </script>
 </head>

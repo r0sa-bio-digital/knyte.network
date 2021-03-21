@@ -3,7 +3,9 @@
 * example user space app (calc sum of two floats) - done
 * commit security - done
 * operate with versions and commit states at user interface - done
-* `changes override protection on commit to prevent overriding actual version by old ones`
+* changes override protection on commit to prevent overriding actual version by old ones
+* `prevent empty commits, when there is actually no diff`
+* embedded diff viewer to check code changes before commit
 * informative ui when server is down
 * additional typescript modules editor
 * run typescript code by frontend runtime

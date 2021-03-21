@@ -51,9 +51,7 @@
       const password = localStorage.getItem("knyte-network-password", "");
       document.getElementById("username").value = username;
       document.getElementById("password").value = password;
-      const version = await fetchActualVersion();
-      document.getElementById("actualVersion").textContent = version.repo;
-      document.getElementById("serverVersion").textContent = version.server;
+      const version = await updateVersion();
       document.getElementById("localVersion").textContent = version.server;
     }
 

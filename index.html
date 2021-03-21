@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>knyte network</title>
+  <script src="https://cdn.jsdelivr.net/npm/diff/dist/diff.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/github.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css" />
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui-slim.min.js"></script>
   <style>
     h1 {
       color: blue;
@@ -11,9 +15,6 @@
     textarea {
       width: 768px;
       height: 128px;
-    }
-    .submit {
-      display: block;
     }
   </style>
   <script>
@@ -116,7 +117,17 @@
         alert("Commit succeed.");
       }
     }
-    
+
+    function diffChanges(target)
+    {
+      const editorElement = document.getElementById(target + '-editor');
+      const diff = Diff.createPatch(target, editorElement.originalValue, editorElement.value);
+      const diffElement = document.getElementById(target + '-diff');
+      const configuration = { inputFormat: 'json', drawFileList: false, matching: 'lines', highlight: true };
+      const diff2htmlUi = new Diff2HtmlUI(diffElement, diff, configuration);
+      diff2htmlUi.draw();
+    }
+
     function onClickCalc()
     {
       const a = document.getElementById("a").value;
@@ -161,11 +172,19 @@
     </div>
   </code>
   <h3>frontend</h3>
-  <button class="submit" onclick="commitChanges('frontend');">commit</button>
+  <div>
+    <button onclick="commitChanges('frontend');">commit</button>
+    <button onclick="diffChanges('frontend');">commit</button>
+  </div>
   <textarea id="frontend-editor" wrap="off"></textarea>
+  <div id="frontend-diff" />
   <h3>backend</h3>
-  <button class="submit" onclick="commitChanges('backend');">commit</button>
+  <div>
+    <button onclick="commitChanges('backend');">commit</button>
+    <button onclick="diffChanges('backend');">commit</button>
+  </div>
   <textarea id="backend-editor" wrap="off"></textarea>
+  <div id="backend-diff" />
   <h3>auth</h3>
   <input id="username" type="text" onchange="onChange();">
   <input id="password" type="password" onchange="onChange();">

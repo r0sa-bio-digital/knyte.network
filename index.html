@@ -118,14 +118,25 @@
       }
     }
 
-    function diffChanges(target)
+    function diffChanges(target, button)
     {
       const editorElement = document.getElementById(target + '-editor');
-      const diff = Diff.createPatch(target, editorElement.originalValue, editorElement.value);
       const diffElement = document.getElementById(target + '-diff');
-      const configuration = { inputFormat: 'json', drawFileList: false, matching: 'lines', highlight: true };
-      const diff2htmlUi = new Diff2HtmlUI(diffElement, diff, configuration);
-      diff2htmlUi.draw();
+      if (button.textContent === 'diff')
+      {
+        const diff = Diff.createPatch(target, editorElement.originalValue, editorElement.value);
+        const configuration = { inputFormat: 'json', drawFileList: false, matching: 'lines', highlight: true };
+        const diff2htmlUi = new Diff2HtmlUI(diffElement, diff, configuration);
+        diff2htmlUi.draw();
+        editorElement.style.display = 'none';
+        button.textContent = 'edit';
+      }
+      else
+      {
+        diffElement.innerHTML = '';
+        editorElement.style.display = 'block';
+        button.textContent = 'diff';
+      }
     }
 
     function onClickCalc()
@@ -174,14 +185,14 @@
   <h3>frontend</h3>
   <div>
     <button onclick="commitChanges('frontend');">commit</button>
-    <button onclick="diffChanges('frontend');">diff</button>
+    <button onclick="diffChanges('frontend', this);">diff</button>
   </div>
   <textarea id="frontend-editor" wrap="off"></textarea>
   <div id="frontend-diff"></div>
   <h3>backend</h3>
   <div>
     <button onclick="commitChanges('backend');">commit</button>
-    <button onclick="diffChanges('backend');">diff</button>
+    <button onclick="diffChanges('backend', this);">diff</button>
   </div>
   <textarea id="backend-editor" wrap="off"></textarea>
   <div id="backend-diff"></div>

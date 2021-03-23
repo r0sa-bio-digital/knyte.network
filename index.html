@@ -173,6 +173,12 @@
     {
       await updateVersion();
     }
+
+    function runModule()
+    {
+      const code = document.getElementById('module-editor').value;
+      eval(code);
+    }
   </script>
 </head>
 <body onload="onLoad();">
@@ -184,6 +190,10 @@
     <span id="a+b"></span>
   </div>
   <h2>modules</h2>
+  <div>
+    <button onclick="runModule();">run</button>
+  </div>
+  <textarea id="module-editor" wrap="off"></textarea>
   <h2>core</h2>
   <h3>frontend</h3>
   <div>

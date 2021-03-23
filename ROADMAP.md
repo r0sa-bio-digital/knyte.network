@@ -3,13 +3,13 @@
 * example user space app (calc sum of two floats) - done
 * commit security - done
 * operate with versions and commit states at user interface - done
-* changes override protection on commit to prevent overriding actual version by old ones
-* prevent empty commits, when there is actually no diff
-* embedded diff viewer to check code changes before commit
-* view only edit or diff of the source code file at the same time
-* informative ui when server is down
-* move roadmap to self editor
-* additional single javascript module editor and frontend side runner
+* changes override protection on commit to prevent overriding actual version by old ones - done
+* prevent empty commits, when there is actually no diff - done
+* embedded diff viewer to check code changes before commit - done
+* view only edit or diff of the source code file at the same time - done
+* informative ui when server is down - done
+* move roadmap to self editor - done
+* additional single javascript module editor and frontend side runner - done
 * `module javascript to typescript runtime transition`
 * multiple modules editor
 * run modules on backend side

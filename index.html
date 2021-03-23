@@ -47,6 +47,7 @@
           console.warn(response.status);
       }
 
+      await loadCodeIntoEditor("roadmap");
       await loadCodeIntoEditor("frontend");
       await loadCodeIntoEditor("backend");
       const username = localStorage.getItem("knyte-network-username", "");
@@ -196,6 +197,13 @@
       <span>local : </span><span id="localVersion"></span>
     </div>
   </code>
+  <h3>roadmap</h3>
+  <div>
+    <button onclick="commitChanges('roadmap');">commit</button>
+    <button onclick="diffChanges('roadmap', this);">diff</button>
+  </div>
+  <textarea id="roadmap-editor" wrap="off"></textarea>
+  <div id="roadmap-diff"></div>
   <h3>frontend</h3>
   <div>
     <button onclick="commitChanges('frontend');">commit</button>

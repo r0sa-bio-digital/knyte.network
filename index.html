@@ -54,7 +54,7 @@
       document.getElementById("username").value = username;
       document.getElementById("password").value = password;
       const version = await updateVersion();
-      document.getElementById("localVersion").textContent = version.server;
+      document.getElementById("localVersion").textContent = version ? version.server : 'error';
     }
 
     async function onChange()
@@ -72,7 +72,13 @@
     async function commitChanges(target)
     {
       const localVersion = document.getElementById("localVersion").textContent;
-      const repoVersion = (await updateVersion()).repo;
+      const version = await updateVersion();
+      if (!version)
+      {
+        setTimeout(() => alert('Failed to commit changes. Server is offline.'), 10);
+        return;
+      }
+      const repoVersion = version.repo;
       if (localVersion !== repoVersion)
       {
         setTimeout(() => alert('Failed to commit changes. Local version does not match actual repo version.'), 10);
@@ -113,8 +119,10 @@
       if (json.error)
         alert("Commit error: " + json.error);
       else {
-        await updateVersion();
-        alert("Commit succeed.");
+        if (await updateVersion())
+          alert("Commit succeed.");
+        else
+          alert("Commit got issues.");
       }
     }
 
@@ -149,8 +157,8 @@
     async function updateVersion()
     {
       const version = await fetchActualVersion();
-      document.getElementById("actualVersion").textContent = version.repo;
-      document.getElementById("serverVersion").textContent = version.server;
+      document.getElementById("actualVersion").textContent = version ? version.repo : 'unknown';
+      document.getElementById("serverVersion").textContent = version ? version.server : 'offline';
       return version;
     }
 

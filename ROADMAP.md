@@ -7,7 +7,8 @@
 * prevent empty commits, when there is actually no diff
 * embedded diff viewer to check code changes before commit
 * view only edit or diff of the source code file at the same time
-* `informative ui when server is down`
+* informative ui when server is down
+* `move roadmap to self editor`
 * additional typescript modules editor
 * run typescript code by frontend runtime
 * run the same typescript code by backend runtime

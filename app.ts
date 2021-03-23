@@ -89,10 +89,11 @@ async function commitFile(owner: string, repo: string, pat: string, coreFilename
 
 const coreOwner = "r0sa-bio-digital";
 const coreRepo = "knyte.network";
-type targetIndex = "backend" | "frontend";
+type targetIndex = "backend" | "frontend" | "roadmap";
 const targets = {
   backend: "app.ts",
   frontend: "index.html",
+  roadmap: "roadmap.md",
 };
 // TODO: find way to determine serverCommitSHA with more accuracy
 const serverCommitSHA = (await getActualCommitDesc(coreOwner, coreRepo, Deno.env.get("GITHAB_PAT") || "")).sha;

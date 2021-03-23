@@ -93,7 +93,7 @@ type targetIndex = "backend" | "frontend" | "roadmap";
 const targets = {
   backend: "app.ts",
   frontend: "index.html",
-  roadmap: "roadmap.md",
+  roadmap: "ROADMAP.md",
 };
 // TODO: find way to determine serverCommitSHA with more accuracy
 const serverCommitSHA = (await getActualCommitDesc(coreOwner, coreRepo, Deno.env.get("GITHAB_PAT") || "")).sha;
